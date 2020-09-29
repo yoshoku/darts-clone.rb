@@ -33,7 +33,7 @@ class RbDoubleArray
       rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), 4);
       rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), 3);
       rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), 3);
-      rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), 2);
+      rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), 4);
       rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), 4);
       rb_define_method(rb_cDoubleArray, "unit_size", RUBY_METHOD_FUNC(_double_array_unit_size), 0);
       rb_define_method(rb_cDoubleArray, "size", RUBY_METHOD_FUNC(_double_array_size), 0);
@@ -101,15 +101,17 @@ class RbDoubleArray
       return INT2NUM(value);
     };
 
-    static VALUE _double_array_common_prefix_search(VALUE self, VALUE _key, VALUE _max_num_results) {
+    static VALUE _double_array_common_prefix_search(VALUE self, VALUE _key, VALUE _max_num_results, VALUE _length, VALUE _node_pos) {
       const int max_n_results = NUM2INT(_max_num_results);
       const char* key = StringValueCStr(_key);
+      const size_t length = (size_t)NUM2INT(_length);
+      const size_t node_pos = (size_t)NUM2INT(_node_pos);
       Darts::DoubleArray::result_pair_type* results = (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(
           max_n_results * sizeof(Darts::DoubleArray::result_pair_type));
-      const size_t sz = get_double_array(self)->commonPrefixSearch(key, results, max_n_results);
-      VALUE lengths = rb_ary_new2((int)sz);
-      VALUE values = rb_ary_new2((int)sz);
-      for (int i = 0; i < (int)sz; i++) {
+      const int sz = (int)get_double_array(self)->commonPrefixSearch(key, results, max_n_results, length, node_pos);
+      VALUE lengths = rb_ary_new2(sz);
+      VALUE values = rb_ary_new2(sz);
+      for (int i = 0; i < sz; i++) {
         rb_ary_store(lengths, i, rb_str_new(key, results[i].length));
         rb_ary_store(values, i, INT2NUM(results[i].value));
       }
