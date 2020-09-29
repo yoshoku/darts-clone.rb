@@ -32,7 +32,7 @@ class RbDoubleArray
       rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), 2);
       rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), 4);
       rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), 3);
-      rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), 1);
+      rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), 3);
       rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), 2);
       rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), 4);
       rb_define_method(rb_cDoubleArray, "unit_size", RUBY_METHOD_FUNC(_double_array_unit_size), 0);
@@ -92,10 +92,12 @@ class RbDoubleArray
       return Qtrue;
     };
 
-    static VALUE _double_array_exact_match_search(VALUE self, VALUE _key) {
+    static VALUE _double_array_exact_match_search(VALUE self, VALUE _key, VALUE _length, VALUE _node_pos) {
       const char* key = StringValueCStr(_key);
+      const size_t length = (size_t)NUM2INT(_length);
+      const size_t node_pos = (size_t)NUM2INT(_node_pos);
       Darts::DoubleArray::value_type value;
-      get_double_array(self)->exactMatchSearch(key, value);
+      get_double_array(self)->exactMatchSearch(key, value, length, node_pos);
       return INT2NUM(value);
     };
 
