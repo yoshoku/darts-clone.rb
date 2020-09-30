@@ -128,7 +128,11 @@ class RbDoubleArray
       size_t key_pos = (size_t)NUM2INT(_key_pos);
       const size_t length = (size_t)NUM2INT(_length);
       Darts::DoubleArray::value_type value = get_double_array(self)->traverse(key, node_pos, key_pos, length);
-      return INT2NUM(value);
+      VALUE ret = rb_hash_new();
+      rb_hash_aset(ret, ID2SYM(rb_intern("value")), INT2NUM(value));
+      rb_hash_aset(ret, ID2SYM(rb_intern("node_pos")), INT2NUM((int)node_pos));
+      rb_hash_aset(ret, ID2SYM(rb_intern("key_pos")), INT2NUM((int)key_pos));
+      return ret;
     };
 
     static VALUE _double_array_unit_size(VALUE self) {
