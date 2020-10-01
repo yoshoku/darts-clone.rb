@@ -32,9 +32,9 @@ class RbDoubleArray
       rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), 2);
       rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), -1);
       rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), -1);
-      rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), 3);
-      rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), 4);
-      rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), 4);
+      rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), -1);
+      rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), -1);
+      rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), -1);
       rb_define_method(rb_cDoubleArray, "unit_size", RUBY_METHOD_FUNC(_double_array_unit_size), 0);
       rb_define_method(rb_cDoubleArray, "size", RUBY_METHOD_FUNC(_double_array_size), 0);
       rb_define_method(rb_cDoubleArray, "total_size", RUBY_METHOD_FUNC(_double_array_total_size), 0);
@@ -110,22 +110,41 @@ class RbDoubleArray
       return Qtrue;
     };
 
-    static VALUE _double_array_exact_match_search(VALUE self, VALUE _key, VALUE _length, VALUE _node_pos) {
+    static VALUE _double_array_exact_match_search(int argc, VALUE* argv, VALUE self) {
+      VALUE _key = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "1:", &_key, &kwargs);
+
+      ID kwtable[2] = { rb_intern("length"), rb_intern("node_pos") };
+      VALUE kwvalues[2] = { Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
+
       const char* key = StringValueCStr(_key);
-      const size_t length = (size_t)NUM2INT(_length);
-      const size_t node_pos = (size_t)NUM2INT(_node_pos);
+      const size_t length = kwvalues[0] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[0]);
+      const size_t node_pos = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+
       Darts::DoubleArray::value_type value;
       get_double_array(self)->exactMatchSearch(key, value, length, node_pos);
       return INT2NUM(value);
     };
 
-    static VALUE _double_array_common_prefix_search(VALUE self, VALUE _key, VALUE _max_num_results, VALUE _length, VALUE _node_pos) {
-      const int max_n_results = NUM2INT(_max_num_results);
+    static VALUE _double_array_common_prefix_search(int argc, VALUE* argv, VALUE self) {
+      VALUE _key = Qnil;
+      VALUE _max_num_results = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "2:", &_key, &_max_num_results, &kwargs);
+
+      ID kwtable[2] = { rb_intern("length"), rb_intern("node_pos") };
+      VALUE kwvalues[2] = { Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
+
       const char* key = StringValueCStr(_key);
-      const size_t length = (size_t)NUM2INT(_length);
-      const size_t node_pos = (size_t)NUM2INT(_node_pos);
-      Darts::DoubleArray::result_pair_type* results = (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(
-          max_n_results * sizeof(Darts::DoubleArray::result_pair_type));
+      const int max_n_results = NUM2INT(_max_num_results);
+      const size_t length = kwvalues[0] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[0]);
+      const size_t node_pos = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+
+      Darts::DoubleArray::result_pair_type* results =
+        (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(max_n_results * sizeof(Darts::DoubleArray::result_pair_type));
       const int sz = (int)get_double_array(self)->commonPrefixSearch(key, results, max_n_results, length, node_pos);
       VALUE lengths = rb_ary_new2(sz);
       VALUE values = rb_ary_new2(sz);
@@ -134,18 +153,29 @@ class RbDoubleArray
         rb_ary_store(values, i, INT2NUM(results[i].value));
       }
       ruby_xfree(results);
+
       VALUE ret = rb_ary_new2(2);
       rb_ary_store(ret, 0, lengths);
       rb_ary_store(ret, 1, values);
       return ret;
     };
 
-    static VALUE _double_array_traverse(VALUE self, VALUE _key, VALUE _node_pos, VALUE _key_pos, VALUE _length) {
+    static VALUE _double_array_traverse(int argc, VALUE* argv, VALUE self) {
+      VALUE _key = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "1:", &_key, &kwargs);
+
+      ID kwtable[3] = {  rb_intern("node_pos"), rb_intern("key_pos"), rb_intern("length") };
+      VALUE kwvalues[3] = { Qundef, Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 2, 1, kwvalues);
+
       const char* key = StringValueCStr(_key);
-      size_t node_pos = (size_t)NUM2INT(_node_pos);
-      size_t key_pos = (size_t)NUM2INT(_key_pos);
-      const size_t length = (size_t)NUM2INT(_length);
+      size_t node_pos = (size_t)NUM2INT(kwvalues[0]);
+      size_t key_pos = (size_t)NUM2INT(kwvalues[1]);
+      const size_t length = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
+
       Darts::DoubleArray::value_type value = get_double_array(self)->traverse(key, node_pos, key_pos, length);
+
       VALUE ret = rb_hash_new();
       rb_hash_aset(ret, ID2SYM(rb_intern("value")), INT2NUM(value));
       rb_hash_aset(ret, ID2SYM(rb_intern("node_pos")), INT2NUM((int)node_pos));
