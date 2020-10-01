@@ -30,8 +30,8 @@ class RbDoubleArray
       rb_define_alloc_func(rb_cDoubleArray, double_array_alloc);
       rb_define_method(rb_cDoubleArray, "initialize", RUBY_METHOD_FUNC(_double_array_init), 0);
       rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), 2);
-      rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), 4);
-      rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), 3);
+      rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), -1);
+      rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), -1);
       rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), 3);
       rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), 4);
       rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), 4);
@@ -71,21 +71,39 @@ class RbDoubleArray
       return Qtrue;
     };
 
-    static VALUE _double_array_open(VALUE self, VALUE _filename, VALUE _mode, VALUE _offset, VALUE _size) {
+    static VALUE _double_array_open(int argc, VALUE* argv, VALUE self) {
+      VALUE _filename = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "1:", &_filename, &kwargs);
+
+      ID kwtable[3] = { rb_intern("mode"), rb_intern("offset"), rb_intern("size") };
+      VALUE kwvalues[3] = { Qundef, Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 3, kwvalues);
+
       const char* filename = StringValueCStr(_filename);
-      const char* mode = StringValueCStr(_mode);
-      const size_t offset = (size_t)NUM2INT(_offset);
-      const size_t size = (size_t)NUM2INT(_size);
+      const char* mode = kwvalues[0] == Qundef ? "rb" : StringValueCStr(kwvalues[0]);
+      const size_t offset = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+      const size_t size = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
+
       if (get_double_array(self)->open(filename, mode, offset, size) != 0) {
         return Qfalse;
       }
       return Qtrue;
     };
 
-    static VALUE _double_array_save(VALUE self, VALUE _filename, VALUE _mode, VALUE _offset) {
+    static VALUE _double_array_save(int argc, VALUE* argv, VALUE self) {
+      VALUE _filename = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "1:", &_filename, &kwargs);
+
+      ID kwtable[2] = { rb_intern("mode"), rb_intern("offset") };
+      VALUE kwvalues[2] = { Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
+
       const char* filename = StringValueCStr(_filename);
-      const char* mode = StringValueCStr(_mode);
-      const size_t offset = (size_t)NUM2INT(_offset);
+      const char* mode = kwvalues[0] == Qundef ? "wb" : StringValueCStr(kwvalues[0]);
+      const size_t offset = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+
       if (get_double_array(self)->save(filename, mode, offset) != 0) {
         return Qfalse;
       }
