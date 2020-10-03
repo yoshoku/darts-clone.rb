@@ -127,6 +127,11 @@ class RbDoubleArray
       VALUE kwvalues[2] = { Qundef, Qundef };
       rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
 
+      if (get_double_array(self)->array() == NULL) {
+        rb_raise(rb_eRuntimeError, "failed to search: dictionary is empty");
+        return Qnil;
+      }
+
       const char* key = StringValueCStr(_key);
       const size_t length = kwvalues[0] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[0]);
       const size_t node_pos = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
@@ -144,6 +149,11 @@ class RbDoubleArray
       ID kwtable[3] = { rb_intern("max_num_results"), rb_intern("length"), rb_intern("node_pos") };
       VALUE kwvalues[3] = { Qundef, Qundef, Qundef };
       rb_get_kwargs(kwargs, kwtable, 0, 3, kwvalues);
+
+      if (get_double_array(self)->array() == NULL) {
+        rb_raise(rb_eRuntimeError, "failed to search: dictionary is empty");
+        return Qnil;
+      }
 
       const char* key = StringValueCStr(_key);
       const size_t max_num_results = kwvalues[0] == Qundef ? (size_t)NUM2INT(rb_funcall(_key, rb_intern("size"), 0)) : (size_t)NUM2INT(kwvalues[0]);
