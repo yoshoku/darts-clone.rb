@@ -4,8 +4,6 @@
 #include <ruby.h>
 #include <darts.h>
 
-#include <vector>
-
 class RbDoubleArray
 {
   public:
@@ -29,7 +27,7 @@ class RbDoubleArray
       VALUE rb_cDoubleArray = rb_define_class_under(rb_mDarts, "DoubleArray", rb_cObject);
       rb_define_alloc_func(rb_cDoubleArray, double_array_alloc);
       rb_define_method(rb_cDoubleArray, "initialize", RUBY_METHOD_FUNC(_double_array_init), 0);
-      rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), 2);
+      rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), -1);
       rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), -1);
       rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), -1);
       rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), -1);
@@ -49,27 +47,37 @@ class RbDoubleArray
       return Qnil;
     };
 
-    static VALUE _double_array_build(VALUE self, VALUE _keys, VALUE _values) {
+    static VALUE _double_array_build(int argc, VALUE* argv, VALUE self) {
+      VALUE _keys = Qnil;
+      VALUE kwargs = Qnil;
+      rb_scan_args(argc, argv, "1:", &_keys, &kwargs);
+
+      ID kwtable[1] = { rb_intern("values") };
+      VALUE kwvalues[1] = { Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 1, kwvalues);
+      VALUE _values = kwvalues[0];
+
       const int n_keys = RARRAY_LEN(_keys);
-      if (n_keys != RARRAY_LEN(_values)) {
-        rb_raise(rb_eArgError, "Array's sizes do not match.");
-        return Qfalse;
-      }
-      std::vector<char*> keys(n_keys, nullptr);
-      std::vector<int> values(n_keys, 0);
+      char** keys = (char**)ruby_xmalloc(n_keys * sizeof(char*));
+      int* values = _values == Qundef ? NULL : (int*)ruby_xmalloc(n_keys * sizeof(int));
       for (int i = 0; i < n_keys; i++) {
         VALUE key_str = rb_ary_entry(_keys, i);
         keys[i] = StringValueCStr(key_str);
-        values[i] = NUM2INT(rb_ary_entry(_values, i));
+        if (_values != Qundef) values[i] = NUM2INT(rb_ary_entry(_values, i));
       }
+
       try {
-        get_double_array(self)->build(n_keys, &keys[0], nullptr, &values[0]);
+        get_double_array(self)->build(n_keys, keys, NULL, values);
       } catch (Darts::Details::Exception e) {
+        ruby_xfree(keys);
+        if (_values != Qundef) ruby_xfree(values);
         rb_raise(rb_eRuntimeError, "%s", e.what());
         return Qfalse;
       }
+      ruby_xfree(keys);
+      if (_values != Qundef) ruby_xfree(values);
       return Qtrue;
-    };
+    }
 
     static VALUE _double_array_open(int argc, VALUE* argv, VALUE self) {
       VALUE _filename = Qnil;
