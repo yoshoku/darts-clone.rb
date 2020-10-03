@@ -10,7 +10,11 @@
 *.so
 *.o
 *.a
+*.swp
 mkmf.log
+tags
+.DS_Store
+.ruby-version
 
 # rspec failure tracking
 .rspec_status
