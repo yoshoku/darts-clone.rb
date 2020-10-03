@@ -1,8 +1,8 @@
-require_relative 'lib/darts/version'
+require_relative 'lib/dartsclone/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'darts-clone-rb'
-  spec.version       = Darts::VERSION
+  spec.name          = 'dartsclone'
+  spec.version       = DartsClone::VERSION
   spec.authors       = ['yoshoku']
   spec.email         = ['yoshoku@outlook.com']
 
@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
-  spec.extensions    = ['ext/darts/extconf.rb']
+  spec.extensions    = ['ext/dartsclone/extconf.rb']
 end

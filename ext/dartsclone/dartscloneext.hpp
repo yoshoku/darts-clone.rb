@@ -1,5 +1,5 @@
-#ifndef DARTSEXT_HPP
-#define DARTSEXT_HPP 1
+#ifndef DARTSCLONEEXT_HPP
+#define DARTSCLONEEXT_HPP 1
 
 #include <ruby.h>
 #include <darts.h>
@@ -213,4 +213,4 @@ class RbDoubleArray
     };
 };
 
-#endif /* DARTSEXT_HPP */
+#endif /* DARTSCLONEEXT_HPP */

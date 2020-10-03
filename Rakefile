@@ -7,9 +7,9 @@ require 'rake/extensiontask'
 
 task :build => :compile
 
-Rake::ExtensionTask.new('dartsext') do |ext|
-  ext.ext_dir = 'ext/darts'
-  ext.lib_dir = 'lib/darts'
+Rake::ExtensionTask.new('dartscloneext') do |ext|
+  ext.ext_dir = 'ext/dartsclone'
+  ext.lib_dir = 'lib/dartsclone'
 end
 
 task :default => [:clobber, :compile, :spec]

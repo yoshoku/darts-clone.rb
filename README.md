@@ -7,7 +7,7 @@ Darts-clone.rb is a Ruby binding for the [Darts-clone](https://github.com/s-yata
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'darts-clone-rb'
+gem 'dartsclone'
 ```
 
 And then execute:
@@ -16,12 +16,12 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install darts-clone-rb
+    $ gem install dartsclone
 
 ## Usage
 
 ```ruby
-require 'darts'
+require 'dartsclone'
 
 ```
 
