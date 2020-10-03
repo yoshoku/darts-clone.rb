@@ -41,7 +41,7 @@ p da.exact_match_search('abcd')
 da.save('foo.dat')
 
 # Load the dictionary.
-da.load('foo.dat')
+da.open('foo.dat')
 ```
 
 ## Contributing
