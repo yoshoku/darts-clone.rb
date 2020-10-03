@@ -138,25 +138,25 @@ class RbDoubleArray
 
     static VALUE _double_array_common_prefix_search(int argc, VALUE* argv, VALUE self) {
       VALUE _key = Qnil;
-      VALUE _max_num_results = Qnil;
       VALUE kwargs = Qnil;
-      rb_scan_args(argc, argv, "2:", &_key, &_max_num_results, &kwargs);
+      rb_scan_args(argc, argv, "1:", &_key, &kwargs);
 
-      ID kwtable[2] = { rb_intern("length"), rb_intern("node_pos") };
-      VALUE kwvalues[2] = { Qundef, Qundef };
-      rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
+      ID kwtable[3] = { rb_intern("max_num_results"), rb_intern("length"), rb_intern("node_pos") };
+      VALUE kwvalues[3] = { Qundef, Qundef, Qundef };
+      rb_get_kwargs(kwargs, kwtable, 0, 3, kwvalues);
 
       const char* key = StringValueCStr(_key);
-      const int max_n_results = NUM2INT(_max_num_results);
-      const size_t length = kwvalues[0] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[0]);
-      const size_t node_pos = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+      const size_t max_num_results = kwvalues[0] == Qundef ? (size_t)NUM2INT(rb_funcall(_key, rb_intern("size"), 0)) : (size_t)NUM2INT(kwvalues[0]);
+      const size_t length = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+      const size_t node_pos = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
 
       Darts::DoubleArray::result_pair_type* results =
-        (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(max_n_results * sizeof(Darts::DoubleArray::result_pair_type));
-      const int sz = (int)get_double_array(self)->commonPrefixSearch(key, results, max_n_results, length, node_pos);
-      VALUE lengths = rb_ary_new2(sz);
-      VALUE values = rb_ary_new2(sz);
-      for (int i = 0; i < sz; i++) {
+        (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(max_num_results * sizeof(Darts::DoubleArray::result_pair_type));
+      const size_t num_matches = get_double_array(self)->commonPrefixSearch(key, results, max_num_results, length, node_pos);
+      const int num_returns = (int)(max_num_results < num_matches ? max_num_results : num_matches);
+      VALUE lengths = rb_ary_new2(num_returns);
+      VALUE values = rb_ary_new2(num_returns);
+      for (int i = 0; i < num_returns; i++) {
         rb_ary_store(lengths, i, rb_str_new(key, results[i].length));
         rb_ary_store(values, i, INT2NUM(results[i].value));
       }
