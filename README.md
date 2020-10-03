@@ -1,6 +1,6 @@
-# darts-clone.rb
+# Darts-clone.rb
 
-darts-clone.rb is Ruby bindings for the Darts-clone.
+Darts-clone.rb is a Ruby binding for the [Darts-clone](https://github.com/s-yata/darts-clone).
 
 ## Installation
 
