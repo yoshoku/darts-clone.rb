@@ -23,6 +23,25 @@ Or install it yourself as:
 ```ruby
 require 'dartsclone'
 
+da = DartsClone::DoubleArray.new
+
+# Construct a dictionary.
+keys = ['abc', 'abcd', 'abcde', 'bcd', 'cde']
+da.build(keys)
+
+# Search for keys which match the prefix of given string.
+p da.common_prefix_search('abcde')
+# => [["abc", "abcd", "abcde"], [0, 1, 2]]
+
+# Search a key which matches a given string.
+p da.exact_match_search('abcd')
+# => 1
+
+# Dump the dictionary.
+da.save('foo.dat')
+
+# Load the dictionary.
+da.load('foo.dat')
 ```
 
 ## Contributing
