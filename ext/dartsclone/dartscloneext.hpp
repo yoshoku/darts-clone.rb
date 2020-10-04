@@ -167,10 +167,11 @@ class RbDoubleArray
 
       VALUE ret = rb_ary_new();
       if (num_returns > 0) {
+        VALUE keyenc = rb_funcall(_key, rb_intern("encoding"), 0);
         VALUE lengths = rb_ary_new2(num_returns);
         VALUE values = rb_ary_new2(num_returns);
         for (int i = 0; i < num_returns; i++) {
-          rb_ary_store(lengths, i, rb_str_new(key, results[i].length));
+          rb_ary_store(lengths, i, rb_funcall(rb_str_new(key, results[i].length), rb_intern("force_encoding"), 1, keyenc));
           rb_ary_store(values, i, INT2NUM(results[i].value));
         }
         rb_ary_push(ret, lengths);
