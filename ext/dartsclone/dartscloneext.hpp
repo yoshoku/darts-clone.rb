@@ -164,17 +164,19 @@ class RbDoubleArray
         (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(max_num_results * sizeof(Darts::DoubleArray::result_pair_type));
       const size_t num_matches = get_double_array(self)->commonPrefixSearch(key, results, max_num_results, length, node_pos);
       const int num_returns = (int)(max_num_results < num_matches ? max_num_results : num_matches);
-      VALUE lengths = rb_ary_new2(num_returns);
-      VALUE values = rb_ary_new2(num_returns);
-      for (int i = 0; i < num_returns; i++) {
-        rb_ary_store(lengths, i, rb_str_new(key, results[i].length));
-        rb_ary_store(values, i, INT2NUM(results[i].value));
+
+      VALUE ret = rb_ary_new();
+      if (num_returns > 0) {
+        VALUE lengths = rb_ary_new2(num_returns);
+        VALUE values = rb_ary_new2(num_returns);
+        for (int i = 0; i < num_returns; i++) {
+          rb_ary_store(lengths, i, rb_str_new(key, results[i].length));
+          rb_ary_store(values, i, INT2NUM(results[i].value));
+        }
+        rb_ary_push(ret, lengths);
+        rb_ary_push(ret, values);
       }
       ruby_xfree(results);
-
-      VALUE ret = rb_ary_new2(2);
-      rb_ary_store(ret, 0, lengths);
-      rb_ary_store(ret, 1, values);
       return ret;
     };
 

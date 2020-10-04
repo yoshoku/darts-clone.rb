@@ -23,9 +23,7 @@ RSpec.describe DartsClone::DoubleArray do
         k = k.map { |s| s.force_encoding(enc) }
         expect(k).to match(%w[東京 東京都])
         expect(v).to match([0, 1])
-        k, v = da.common_prefix_search('東')
-        expect(k).to be_empty
-        expect(v).to be_empty
+        expect(da.common_prefix_search('東')).to be_empty
       end
     end
 
@@ -45,9 +43,7 @@ RSpec.describe DartsClone::DoubleArray do
         k = k.map { |s| s.force_encoding(enc) }
         expect(k).to match(%w[東京 東京都])
         expect(v).to match([4, 3])
-        k, v = da.common_prefix_search('東')
-        expect(k).to be_empty
-        expect(v).to be_empty
+        expect(da.common_prefix_search('東')).to be_empty
       end
     end
   end
