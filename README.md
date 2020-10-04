@@ -1,5 +1,9 @@
 # Darts-clone.rb
 
+[![Build Status](https://travis-ci.org/yoshoku/darts-clone.rb.svg?branch=master)](https://travis-ci.org/yoshoku/darts-clone.rb)
+[![Gem Version](https://badge.fury.io/rb/dartsclone.svg)](https://badge.fury.io/rb/dartsclone)
+[![BSD 2-Clause License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://github.com/yoshoku/darts-clone.rb/blob/master/LICENSE.txt)
+
 Darts-clone.rb is a Ruby binding for the [Darts-clone](https://github.com/s-yata/darts-clone).
 
 ## Installation
