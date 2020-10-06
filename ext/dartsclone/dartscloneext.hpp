@@ -90,8 +90,8 @@ class RbDoubleArray
 
       const char* filename = StringValueCStr(_filename);
       const char* mode = kwvalues[0] == Qundef ? "rb" : StringValueCStr(kwvalues[0]);
-      const size_t offset = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
-      const size_t size = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
+      const size_t offset = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
+      const size_t size = kwvalues[2] == Qundef ? 0 : NUM2SIZET(kwvalues[2]);
 
       if (get_double_array(self)->open(filename, mode, offset, size) != 0) {
         return Qfalse;
@@ -110,7 +110,7 @@ class RbDoubleArray
 
       const char* filename = StringValueCStr(_filename);
       const char* mode = kwvalues[0] == Qundef ? "wb" : StringValueCStr(kwvalues[0]);
-      const size_t offset = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+      const size_t offset = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
 
       if (get_double_array(self)->save(filename, mode, offset) != 0) {
         return Qfalse;
@@ -133,8 +133,8 @@ class RbDoubleArray
       }
 
       const char* key = StringValueCStr(_key);
-      const size_t length = kwvalues[0] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[0]);
-      const size_t node_pos = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
+      const size_t length = kwvalues[0] == Qundef ? 0 : NUM2SIZET(kwvalues[0]);
+      const size_t node_pos = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
 
       Darts::DoubleArray::value_type value;
       get_double_array(self)->exactMatchSearch(key, value, length, node_pos);
@@ -156,9 +156,9 @@ class RbDoubleArray
       }
 
       const char* key = StringValueCStr(_key);
-      const size_t max_num_results = kwvalues[0] == Qundef ? (size_t)NUM2INT(rb_funcall(_key, rb_intern("size"), 0)) : (size_t)NUM2INT(kwvalues[0]);
-      const size_t length = kwvalues[1] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[1]);
-      const size_t node_pos = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
+      const size_t max_num_results = kwvalues[0] == Qundef ? NUM2SIZET(rb_funcall(_key, rb_intern("size"), 0)) : NUM2SIZET(kwvalues[0]);
+      const size_t length = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
+      const size_t node_pos = kwvalues[2] == Qundef ? 0 : NUM2SIZET(kwvalues[2]);
 
       Darts::DoubleArray::result_pair_type* results =
         (Darts::DoubleArray::result_pair_type*)ruby_xmalloc(max_num_results * sizeof(Darts::DoubleArray::result_pair_type));
@@ -191,9 +191,9 @@ class RbDoubleArray
       rb_get_kwargs(kwargs, kwtable, 2, 1, kwvalues);
 
       const char* key = StringValueCStr(_key);
-      size_t node_pos = (size_t)NUM2INT(kwvalues[0]);
-      size_t key_pos = (size_t)NUM2INT(kwvalues[1]);
-      const size_t length = kwvalues[2] == Qundef ? 0 : (size_t)NUM2INT(kwvalues[2]);
+      size_t node_pos = NUM2SIZET(kwvalues[0]);
+      size_t key_pos = NUM2SIZET(kwvalues[1]);
+      const size_t length = kwvalues[2] == Qundef ? 0 : NUM2SIZET(kwvalues[2]);
 
       Darts::DoubleArray::value_type value = get_double_array(self)->traverse(key, node_pos, key_pos, length);
 
