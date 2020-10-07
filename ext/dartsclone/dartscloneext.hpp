@@ -30,6 +30,8 @@ class RbDoubleArray
       rb_define_method(rb_cDoubleArray, "build", RUBY_METHOD_FUNC(_double_array_build), -1);
       rb_define_method(rb_cDoubleArray, "open", RUBY_METHOD_FUNC(_double_array_open), -1);
       rb_define_method(rb_cDoubleArray, "save", RUBY_METHOD_FUNC(_double_array_save), -1);
+      rb_define_method(rb_cDoubleArray, "get_array", RUBY_METHOD_FUNC(_double_array_get_array), 0);
+      rb_define_method(rb_cDoubleArray, "set_array", RUBY_METHOD_FUNC(_double_array_set_array), 1);
       rb_define_method(rb_cDoubleArray, "exact_match_search", RUBY_METHOD_FUNC(_double_array_exact_match_search), -1);
       rb_define_method(rb_cDoubleArray, "common_prefix_search", RUBY_METHOD_FUNC(_double_array_common_prefix_search), -1);
       rb_define_method(rb_cDoubleArray, "traverse", RUBY_METHOD_FUNC(_double_array_traverse), -1);
@@ -116,6 +118,20 @@ class RbDoubleArray
         return Qfalse;
       }
       return Qtrue;
+    };
+
+    static VALUE _double_array_get_array(VALUE self) {
+      const char* arr = (char*)get_double_array(self)->array();
+      const size_t sz = get_double_array(self)->total_size();
+      return rb_str_new(arr, sz);
+    };
+
+    static VALUE _double_array_set_array(VALUE self, VALUE bytes) {
+      const size_t sz = NUM2SIZET(rb_funcall(bytes, rb_intern("size"), 0));
+      const size_t total_sz = sz / get_double_array(self)->unit_size();
+      char* arr = StringValuePtr(bytes);
+      get_double_array(self)->set_array(arr, total_sz);
+      return Qnil;
     };
 
     static VALUE _double_array_exact_match_search(int argc, VALUE* argv, VALUE self) {

@@ -79,6 +79,30 @@ RSpec.describe DartsClone::DoubleArray do
     end
   end
 
+  describe '#get_array and #set_array' do
+    let(:arr) { da.get_array }
+    let(:da2) { described_class.new }
+
+    before do
+      da.build(keys, values: vals)
+      da2.set_array(arr)
+    end
+
+    it 'dumps and restores array', :aggregate_failures do
+      expect(da2.size).to eq(da.size)
+      expect(da2.total_size).to eq(da.total_size)
+      expect(da2.get_array).to match(arr)
+      expect(da2.exact_match_search('東京')).to eq(4)
+      expect(da2.exact_match_search('東京都')).to eq(3)
+      expect(da2.exact_match_search('東京都中野区')).to eq(2)
+      expect(da2.exact_match_search('東京都庁')).to eq(1)
+      expect(da2.exact_match_search('東')).to eq(-1)
+      k, v = da2.common_prefix_search('東京都中野区')
+      expect(k).to match(%w[東京 東京都 東京都中野区])
+      expect(v).to match([4, 3, 2])
+    end
+  end
+
   describe '#clear' do
     before { da.build(keys, values: vals) }
 
