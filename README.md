@@ -1,6 +1,6 @@
 # Darts-clone.rb
 
-[![Build Status](https://travis-ci.org/yoshoku/darts-clone.rb.svg?branch=master)](https://travis-ci.org/yoshoku/darts-clone.rb)
+[![Build Status](https://github.com/yoshoku/darts-clone.rb/workflows/build/badge.svg)](https://github.com/yoshoku/darts-clone.rb/actions?query=workflow%3Abuild)
 [![Gem Version](https://badge.fury.io/rb/dartsclone.svg)](https://badge.fury.io/rb/dartsclone)
 [![BSD 2-Clause License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://github.com/yoshoku/darts-clone.rb/blob/master/LICENSE.txt)
 
