@@ -1,3 +1,7 @@
+## 0.2.1
+- Replace Data_ functions to TypedData_ functions.
+- Fix some config files.
+
 ## 0.2.0
 - Add get_array and set_array methods to dump and load array data.
 
