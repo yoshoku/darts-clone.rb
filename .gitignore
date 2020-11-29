@@ -15,6 +15,7 @@ mkmf.log
 tags
 .DS_Store
 .ruby-version
+spec/foo.dat
 
 # rspec failure tracking
 .rspec_status
