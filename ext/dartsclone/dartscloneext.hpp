@@ -9,17 +9,21 @@ class RbDoubleArray
   public:
     static VALUE double_array_alloc(VALUE self) {
       Darts::DoubleArray* ptr = (Darts::DoubleArray*)ruby_xmalloc(sizeof(Darts::DoubleArray));
-      return Data_Wrap_Struct(self, NULL, double_array_free, ptr);
+      return TypedData_Wrap_Struct(self, &double_array_type, ptr);
     };
 
-    static void double_array_free(Darts::DoubleArray* ptr) {
-      ptr->~DoubleArrayImpl();
+    static void double_array_free(void* ptr) {
+      ((Darts::DoubleArray*)ptr)->~DoubleArrayImpl();
       ruby_xfree(ptr);
+    };
+
+    static size_t double_array_size(const void* ptr) {
+      return sizeof(*((Darts::DoubleArray*)ptr));
     };
 
     static Darts::DoubleArray* get_double_array(VALUE self) {
       Darts::DoubleArray* ptr;
-      Data_Get_Struct(self, Darts::DoubleArray, ptr);
+      TypedData_Get_Struct(self, Darts::DoubleArray, &double_array_type, ptr);
       return ptr;
     };
 
@@ -43,6 +47,8 @@ class RbDoubleArray
     };
 
   private:
+    static const rb_data_type_t double_array_type;
+
     static VALUE _double_array_init(VALUE self) {
       Darts::DoubleArray* ptr = get_double_array(self);
       new (ptr) Darts::DoubleArray();
@@ -240,6 +246,18 @@ class RbDoubleArray
       get_double_array(self)->clear();
       return Qnil;
     };
+};
+
+const rb_data_type_t RbDoubleArray::double_array_type = {
+  "RbDoubleArray",
+  {
+    NULL,
+    RbDoubleArray::double_array_free,
+    RbDoubleArray::double_array_size
+  },
+  NULL,
+  NULL,
+  RUBY_TYPED_FREE_IMMEDIATELY
 };
 
 #endif /* DARTSCLONEEXT_HPP */
