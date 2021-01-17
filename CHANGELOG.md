@@ -1,3 +1,6 @@
+## 0.2.2
+- Refactor native extension codes considering garbage collection.
+
 ## 0.2.1
 - Replace Data_ functions to TypedData_ functions.
 - Fix some config files.
