@@ -1,6 +1,8 @@
 #ifndef DARTSCLONEEXT_HPP
 #define DARTSCLONEEXT_HPP 1
 
+#include <cstring>
+
 #include <ruby.h>
 #include <darts.h>
 
@@ -68,22 +70,26 @@ class RbDoubleArray
       const int n_keys = RARRAY_LEN(_keys);
       char** keys = (char**)ruby_xmalloc(n_keys * sizeof(char*));
       int* values = _values == Qundef ? NULL : (int*)ruby_xmalloc(n_keys * sizeof(int));
+      VALUE key_str;
       for (int i = 0; i < n_keys; i++) {
-        VALUE key_str = rb_ary_entry(_keys, i);
-        keys[i] = StringValueCStr(key_str);
+        key_str = rb_ary_entry(_keys, i);
+        keys[i] = strcpy((char*)ruby_xmalloc((RSTRING_LEN(key_str) + 1) * sizeof(char)), StringValueCStr(key_str));
         if (_values != Qundef) values[i] = NUM2INT(rb_ary_entry(_values, i));
       }
 
       try {
         get_double_array(self)->build(n_keys, keys, NULL, values);
       } catch (Darts::Details::Exception e) {
+        for (int i = 0; i < n_keys; i++) ruby_xfree(keys[i]);
         ruby_xfree(keys);
         if (_values != Qundef) ruby_xfree(values);
         rb_raise(rb_eRuntimeError, "%s", e.what());
         return Qfalse;
       }
+      for (int i = 0; i < n_keys; i++) ruby_xfree(keys[i]);
       ruby_xfree(keys);
       if (_values != Qundef) ruby_xfree(values);
+      RB_GC_GUARD(key_str);
       return Qtrue;
     }
 
@@ -97,13 +103,16 @@ class RbDoubleArray
       rb_get_kwargs(kwargs, kwtable, 0, 3, kwvalues);
 
       const char* filename = StringValueCStr(_filename);
-      const char* mode = kwvalues[0] == Qundef ? "rb" : StringValueCStr(kwvalues[0]);
+      VALUE _mode = kwvalues[0];
+      const char* mode = kwvalues[0] == Qundef ? "rb" : StringValueCStr(_mode);
       const size_t offset = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
       const size_t size = kwvalues[2] == Qundef ? 0 : NUM2SIZET(kwvalues[2]);
 
       if (get_double_array(self)->open(filename, mode, offset, size) != 0) {
         return Qfalse;
       }
+      RB_GC_GUARD(_filename);
+      RB_GC_GUARD(_mode);
       return Qtrue;
     };
 
@@ -117,12 +126,15 @@ class RbDoubleArray
       rb_get_kwargs(kwargs, kwtable, 0, 2, kwvalues);
 
       const char* filename = StringValueCStr(_filename);
-      const char* mode = kwvalues[0] == Qundef ? "wb" : StringValueCStr(kwvalues[0]);
+      VALUE _mode = kwvalues[0];
+      const char* mode = kwvalues[0] == Qundef ? "wb" : StringValueCStr(_mode);
       const size_t offset = kwvalues[1] == Qundef ? 0 : NUM2SIZET(kwvalues[1]);
 
       if (get_double_array(self)->save(filename, mode, offset) != 0) {
         return Qfalse;
       }
+      RB_GC_GUARD(_filename);
+      RB_GC_GUARD(_mode);
       return Qtrue;
     };
 
@@ -137,6 +149,7 @@ class RbDoubleArray
       const size_t total_sz = sz / get_double_array(self)->unit_size();
       char* arr = StringValuePtr(bytes);
       get_double_array(self)->set_array(arr, total_sz);
+      RB_GC_GUARD(bytes);
       return Qnil;
     };
 
@@ -160,6 +173,7 @@ class RbDoubleArray
 
       Darts::DoubleArray::value_type value;
       get_double_array(self)->exactMatchSearch(key, value, length, node_pos);
+      RB_GC_GUARD(_key);
       return INT2NUM(value);
     };
 
@@ -200,6 +214,7 @@ class RbDoubleArray
         rb_ary_push(ret, values);
       }
       ruby_xfree(results);
+      RB_GC_GUARD(_key);
       return ret;
     };
 
