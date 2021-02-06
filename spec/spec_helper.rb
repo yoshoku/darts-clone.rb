@@ -3,6 +3,10 @@
 require 'bundler/setup'
 require 'dartsclone'
 
+if defined?(GC.verify_compaction_references) == 'method'
+  GC.verify_compaction_references(double_heap: true, toward: :empty)
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
