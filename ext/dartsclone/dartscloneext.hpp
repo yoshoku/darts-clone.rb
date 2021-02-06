@@ -238,6 +238,7 @@ class RbDoubleArray
       rb_hash_aset(ret, ID2SYM(rb_intern("value")), INT2NUM(value));
       rb_hash_aset(ret, ID2SYM(rb_intern("node_pos")), INT2NUM((int)node_pos));
       rb_hash_aset(ret, ID2SYM(rb_intern("key_pos")), INT2NUM((int)key_pos));
+      RB_GC_GUARD(_key);
       return ret;
     };
 
