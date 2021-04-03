@@ -1,3 +1,6 @@
+## 0.2.3
+- Fix some codes and configulation files.
+
 ## 0.2.2
 - Refactor native extension codes considering garbage collection.
 
