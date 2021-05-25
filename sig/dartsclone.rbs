@@ -1,0 +1,20 @@
+module DartsClone
+  VERSION: String
+  DARTS_CLONE_VERSION: String
+
+  class DoubleArray
+    def initialize: () -> void
+    def build: (Array[String] keys, ?values: Array[Integer]? values) -> bool
+    def open: (String filename) -> bool
+    def save: (String filename, ?mode: String mode, ?offset: Integer offset) -> bool
+    def get_array: () -> String
+    def set_array: (String str) -> nil
+    def exact_match_search: (String key, ?length: Integer length, ?node_pos: Integer node_pos) -> Integer
+    def common_prefix_search: (String key, ?max_num_results: Integer? max_num_results, ?length: Integer length, ?node_pos: Integer node_pos) -> [Array[String], Array[Integer]]
+    def traverse: (String key, ?node_pos: Integer? node_pos, ?key_pos: Integer? key_pos, ?length: Integer? length) -> { value: Integer, node_pos: Integer, key_pos: Integer }
+    def unit_size: () -> Integer
+    def size: () -> Integer
+    def total_size: () -> Integer
+    def clear: () -> nil
+  end
+end
