@@ -1,3 +1,6 @@
+## 0.3.0
+- Add type declaration file: sig/dartsclone.rbs
+
 ## 0.2.3
 - Fix some codes and configulation files.
 
