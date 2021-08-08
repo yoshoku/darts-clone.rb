@@ -1,3 +1,6 @@
+## 0.3.1
+- Add dummy constructor call at memory allocation of binding class to prevent occuring segment fault on GC when initialize method is failed.
+
 ## 0.3.0
 - Add type declaration file: sig/dartsclone.rbs
 
