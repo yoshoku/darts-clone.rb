@@ -11,6 +11,7 @@ class RbDoubleArray
   public:
     static VALUE double_array_alloc(VALUE self) {
       Darts::DoubleArray* ptr = (Darts::DoubleArray*)ruby_xmalloc(sizeof(Darts::DoubleArray));
+      new (ptr) Darts::DoubleArray(); // dummy call to constructor for GC.
       return TypedData_Wrap_Struct(self, &double_array_type, ptr);
     };
 
