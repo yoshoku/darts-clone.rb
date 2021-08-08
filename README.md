@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/dartsclone.svg)](https://badge.fury.io/rb/dartsclone)
 [![BSD 2-Clause License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://github.com/yoshoku/darts-clone.rb/blob/main/LICENSE.txt)
 
-Darts-clone.rb is a Ruby binding for the [Darts-clone](https://github.com/s-yata/darts-clone).
+Darts-clone.rb provides Ruby bindings for the [Darts-clone](https://github.com/s-yata/darts-clone).
 
 ## Installation
 

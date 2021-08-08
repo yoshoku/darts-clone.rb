@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['yoshoku']
   spec.email         = ['yoshoku@outlook.com']
 
-  spec.summary       = 'Ruby binding for the Darts-clone.'
-  spec.description   = 'Darts-clone.rb is a Ruby binding for the Darts-clone.'
+  spec.summary       = 'Ruby bindings for the Darts-clone.'
+  spec.description   = 'Darts-clone.rb provides Ruby bindings for the Darts-clone.'
   spec.homepage      = 'https://github.com/yoshoku/darts-clone.rb'
   spec.license       = 'BSD-2-Clause'
 
