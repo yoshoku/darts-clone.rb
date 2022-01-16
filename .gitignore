@@ -6,11 +6,13 @@
 /pkg/
 /spec/reports/
 /tmp/
+/node_modules/
 *.bundle
 *.so
 *.o
 *.a
 *.swp
+*.lock
 mkmf.log
 tags
 .DS_Store
