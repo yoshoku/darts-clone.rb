@@ -3,6 +3,7 @@
   "repository": "git@github.com:yoshoku/darts-clone.rb.git",
   "author": "Atsushi Tatsuma <yoshoku@outlook.com>",
   "license": "BSD-2-Clause",
+  "private": true,
   "scripts": {
     "prepare": "husky install"
   },
