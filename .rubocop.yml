@@ -1,0 +1,17 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  Exclude:
+    - 'ext/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - 'Steepfile'
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
