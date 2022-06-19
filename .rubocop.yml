@@ -15,3 +15,10 @@ AllCops:
 
 Gemspec/RequiredRubyVersion:
   Enabled: false
+
+RSpec/ExampleLength:
+  Max: 16
+
+RSpec/FilePath:
+  Exclude:
+    - 'spec/dartsclone_spec.rb'
