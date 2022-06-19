@@ -64,7 +64,7 @@ RSpec.describe DartsClone::DoubleArray do
   end
 
   describe '#save and #open' do
-    let(:filename) { File.expand_path(__dir__ + '/foo.dat') }
+    let(:filename) { File.expand_path("#{__dir__}/foo.dat") }
 
     before { da.build(keys, values: vals) }
 
