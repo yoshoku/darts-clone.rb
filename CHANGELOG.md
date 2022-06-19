@@ -1,3 +1,6 @@
+## 0.3.2
+- Refactor codes and configs with RuboCop.
+
 ## 0.3.1
 - Add dummy constructor call at memory allocation of binding class to prevent occuring segment fault on GC when initialize method is failed.
 
